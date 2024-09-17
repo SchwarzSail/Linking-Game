@@ -5,6 +5,7 @@ class MainMenu:
         self.screen = screen
         self.screen_width = screen.get_width()
         self.screen_height = screen.get_height()
+        self.background = pygame.image.load('../assets/background/back.png')  # 加载背景图片
 
     def draw_button(self, rect, text):
         # 绘制圆角矩形按钮
@@ -32,7 +33,7 @@ class MainMenu:
         selected_difficulty = None
 
         while True:
-            self.screen.fill((255, 255, 255))  # 清空屏幕
+            self.screen.blit(self.background, (0, 0))  # 显示背景图片
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -49,4 +50,3 @@ class MainMenu:
                 self.draw_button(rect, difficulty.capitalize())
 
             pygame.display.flip()
-

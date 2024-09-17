@@ -17,23 +17,8 @@ def main():
     # 创建游戏实例，并将难度系数传入
     game = Game(screen, difficulty_level=selected_difficulty)
 
-    running = True
-    clock = pygame.time.Clock()
+    game.show()
 
-    while running:
-        clock.tick(30)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-        # 更新游戏
-        game.update()
-        game.draw()
-
-        pygame.display.flip()
-
-    pygame.quit()
 
 if __name__ == "__main__":
     main()

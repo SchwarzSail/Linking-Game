@@ -69,6 +69,7 @@ class Game:
                     self.board[row][col] = None  # 移除第二次点击的图片
                     self.board[self.first_click[0]][self.first_click[1]] = None  # 移除第一次点击的图片
             self.first_click = None  # 重置第一次点击
+
     def is_path_clear(self, start, end):
         # 这里可以实现路径检查逻辑
         return True
@@ -79,14 +80,12 @@ class Game:
         exit()
 
     def draw(self):
-        self.screen.blit(self.background, (0, 0))  # 绘制背景图片
-        # 计算游戏板的总宽度和高度，考虑间隔
+        self.screen.blit(self.background, (0, 0))
         tile_size = 100
         spacing = 10
         board_width = len(self.board[0]) * (tile_size + spacing) - spacing
         board_height = len(self.board) * (tile_size + spacing) - spacing
 
-        # 计算游戏板的左上角位置，使其居中
         offset_x = (self.screen.get_width() - board_width) // 2
         offset_y = (self.screen.get_height() - board_height) // 2
 
@@ -94,14 +93,33 @@ class Game:
             for col in range(len(self.board[row])):
                 tile = self.board[row][col]
                 if tile is not None:
-                    # 使用计算出的左上角位置进行偏移，并添加间隔
                     x = col * (tile_size + spacing) + offset_x
                     y = row * (tile_size + spacing) + offset_y
                     self.screen.blit(tile, (x, y))
 
-        # 创建字体对象
         font = pygame.font.Font(None, 36)
-        # 渲染剩余时间为文本图像，只显示整数秒数
         time_text = font.render(f"Time Left: {int(self.time_left)}", True, (0, 0, 0))
-        # 将文本图像绘制到屏幕上
         self.screen.blit(time_text, (10, 10))
+
+    def show_game_over_screen(self):
+        self.screen.blit(self.background, (0, 0))  # 显示背景图片
+        font = pygame.font.Font(None, 74)
+        text = font.render("Game Over", True, (255, 0, 0))
+        text_rect = text.get_rect(center=(self.screen.get_width() // 2, self.screen.get_height() // 2))
+        self.screen.blit(text, text_rect)
+        pygame.display.flip()
+        pygame.time.wait(3000)  # 显示3秒钟
+
+    def show(self):
+        running = 1
+        while running:
+            self.update()
+            self.draw()
+            pygame.display.flip()
+            if self.time_left <= 0:
+                self.game_over()
+            if all(tile is None for row in self.board for tile in row):
+                print("You Win!")
+                self.show_game_over_screen()
+                pygame.quit()
+                exit()
